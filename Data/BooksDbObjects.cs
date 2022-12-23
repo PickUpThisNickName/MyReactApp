@@ -13,8 +13,6 @@ namespace test.Data
                     new Book { Name = "Ньют, нарушитель законов физики", Year = "2021", Autor = "Егор Михайлович Кириченко", Genre = "Фантастика" },
                     new Book { Name = "Человек, который умер смеясь", Year = "1860", Autor = "Виктор Гюго", Genre = "Детектив" }
                     );
-                Log.Debug("В базу данных DB_Books добавлены стартовые значения");
-
                 content.SaveChanges();
             }
         }

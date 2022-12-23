@@ -26,14 +26,14 @@ export class Logout extends Component {
           this.logout(this.getReturnUrl());
         } else {
           // This prevents regular links to <app>/authentication/logout from triggering a logout
-          this.setState({ isReady: true, message: "The logout was not initiated from within the page." });
+          this.setState({ isReady: true, message: "Не удалось выйти из аккаунта." });
         }
         break;
       case LogoutActions.LogoutCallback:
         this.processLogoutCallback();
         break;
       case LogoutActions.LoggedOut:
-        this.setState({ isReady: true, message: "You successfully logged out!" });
+        this.setState({ isReady: true, message: "Вы успешно вышли из аккаунта!" });
         break;
       default:
         throw new Error(`Invalid action '${action}'`);
@@ -82,7 +82,7 @@ export class Logout extends Component {
           throw new Error("Invalid authentication result status.");
       }
     } else {
-      this.setState({ message: "You successfully logged out!" });
+      this.setState({ message: "Вы успешно вышли из аккаунта!" });
     }
   }
 

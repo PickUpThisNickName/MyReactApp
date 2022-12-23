@@ -29,14 +29,6 @@ builder.Services.AddIdentityServer()
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .MinimumLevel.Override("Default", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .WriteTo.File($@"{Directory.GetCurrentDirectory()}\Logs\{DateTime.Now:yyyy-MM-dd}.log"
-                    , outputTemplate: "[{Timestamp:HH:mm:ss.fff}] |{Level:u3}| {Message:lj}{NewLine}{Exception}")
-    .CreateLogger();
-
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
