@@ -104,7 +104,7 @@ export class Login extends Component {
     const fromQuery = params.get(QueryParameterNames.ReturnUrl);
     if (fromQuery && !fromQuery.startsWith(`${window.location.origin}/`)) {
       // This is an extra check to prevent open redirects.
-      throw new Error("Invalid return url. The return url needs to have the same origin as the current page.")
+      throw new Error("Неверное значение returnurl, значение должно совпадать с url страницы.")
     }
     return (state && state.returnUrl) || fromQuery || `${window.location.origin}/`;
   }

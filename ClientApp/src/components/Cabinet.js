@@ -24,9 +24,7 @@ export class Cabinet extends Component {
 	 fetch('books/add', {
       headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
     });
-	this.componentDidMount();
-	Cabinet.render();
-	
+	  this.getdata();
   }
 
 
@@ -73,7 +71,7 @@ export class Cabinet extends Component {
 				outline: 0,
 				marginLeft: "5px"
 			}}
-			onClick={this.myHandler}
+			onClick={this.myHandler.bind(this)}
 		>
 			Добавить
 		</button>

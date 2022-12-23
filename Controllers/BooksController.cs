@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Serilog;
 using test.Data;
-//using System.Web.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace test.Controllers;
 
-//[Authorize]
 [ApiController]
 public class BooksController : ControllerBase
 {
@@ -79,5 +76,4 @@ public class BooksController : ControllerBase
         _booksDbContext.DB_Books.Add(book);
         _booksDbContext.SaveChanges();
     }
-
 }
