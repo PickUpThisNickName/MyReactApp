@@ -64,7 +64,7 @@ public class BooksController : ControllerBase
     }
     [Route("Books/Add")]
     [HttpGet]
-    public void Add()
+    public Book Add()
     {
         Book book = new Book()
         {
@@ -75,5 +75,8 @@ public class BooksController : ControllerBase
         };
         _booksDbContext.DB_Books.Add(book);
         _booksDbContext.SaveChanges();
+        return _booksDbContext.DB_Books
+            .OrderByDescending(a => a.Id)
+            .FirstOrDefault();
     }
 }

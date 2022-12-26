@@ -16,8 +16,9 @@ ClientApp/src/SetupProxy
 
 # Сборка и  запуск
 Для успешного запуска приложения в режиме отладки требуется node.js. Необходимо установить в папку
-ClientApp пакеты для реакта "node-modules", перечисленные в файле package.json.
-Это можно сделать с помощью команды npm install в powershell.
+ClientApp пакеты для реакта "node-modules". Это можно сделать с помощью команды npm install
+в windows powershell. Перед этим необходимо в powershell перейти в каталог ClientApp с помощью
+команды cd Путь\test\ClientApp.
 
 # Базы данных
 Контент приложения хранится в mysql файлах books.db и app.db.

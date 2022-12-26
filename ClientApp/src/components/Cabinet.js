@@ -1,97 +1,105 @@
-import React, { Component } from 'react';
+﻿import React, { Component } from 'react';
 import authService from './api-authorization/AuthorizeService'
-import {useState} from 'react'
-import TableRow from './TableRow'
+import TableRow from './TableRow';
 
 
-export class Cabinet extends Component {
-  static displayName = Cabinet.name;
+export class Cabinet extends React.Component {
+    static displayName = Cabinet.name;
 
-  constructor(props) {
-    super(props);
-    this.state = { 
-		books_array: [], 
-		loading: true
-	};
-  }
+    constructor(props) {
+        super(props);
+        this.deleteClick = this.deleteClick.bind(this);
+        this.state = { books: [], loading: true };
+    }
 
-  componentDidMount() {
-    this.getdata();
-  }
-  
-  myHandler(){
-	 const token = authService.getAccessToken();
-	 fetch('books/add', {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-    });
-	  this.getdata();
-  }
+    componentDidMount() {
+        this.loadDataFromServer();
+    }
 
+    async loadDataFromServer() {
+        const token = await authService.getAccessToken();
+        const response = await fetch('books/get', {
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        this.setState({ books: data, loading: false });
+    }
+    async addClick() {
+        const token = await authService.getAccessToken();
+        const response = await fetch('books/add', {
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        
+        this.setState(prevState => ({
+            books: [...prevState.books, data],
+            loading: false
+        }));
+    }
+        
+    deleteClick(id, e) {
+        if( window.confirm("вы действительно хотите удалить книгу?") ) {
+            const row = e.target.parentNode.parentNode;
+            row.parentNode.removeChild(row);
 
-    static renderTable(books_array){
-	
-    return (
-	        <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead style={{textAlign: "center"}}>
-          <tr>
-		    <th>Id</th>
-            <th>Название</th>
-            <th>Год</th>
-            <th>Жанр</th>
-            <th>Автор</th>
-            <th>Управление</th>
-          </tr>
-        </thead>
-        <tbody style={{textAlign: "center"}}>
-          {
-			books_array.map(book => <TableRow book={book} edit={false} /> )
-		  }
-        </tbody>
-      </table>
-
-    );
-  }
-
-  render() {
-    let contents = this.state.loading
-      ? <p><em>Loading...</em></p>
-      : Cabinet.renderTable(this.state.books_array);
-	
-    return (
-	      <div>
-        <h1 id="tabelLabel">Список книг</h1>
-        <p>Это таблица с книгами, здесь можно добавить или удалить книги, а также переименовать существующие</p>
-        {contents}
-			  			  <button 
-			style={{
-				width:"100px",
-				height:"30px",
-				borderRadius: "5px",
-				borderColor: "#EEE",
-				outline: 0,
-				marginLeft: "5px"
-			}}
-			onClick={this.myHandler.bind(this)}
-		>
-			Добавить
-		</button>
-
-      </div>
-    );
-  }
-
-  async getdata() {
-    const token = await authService.getAccessToken();
-    fetch('books/get', {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-    }).then(res => res.json()).then(
-        (result) => {
-          this.setState({
-            books_array: result,
-			loading: false
-          });
+            fetch('books/delete',
+                {
+                    method: 'POST',
+                    headers: new Headers({'Content-Type': 'application/json'}),
+                    body: JSON.stringify({"id": id})
+                });
         }
-      );
-  }
+    }
+        
+    static renderTable(books, _deleteClick) {
+        return (
+            <table className='table table-striped' aria-labelledby="tabelLabel">
+                <thead style={{textAlign: "center"}}>
+                <tr>
+                    <th>Id</th>
+                    <th>Название</th>
+                    <th>Год</th>
+                    <th>Жанр</th>
+                    <th>Автор</th>
+                    <th>Управление</th>
+                </tr>
+                </thead>
+                <tbody>
+                {books.map(book =>
+                    <TableRow book={book} edit={false} deleteClick={_deleteClick} /> 
+                )}
+                </tbody>
+            </table>
+        );
+    }
+
+    render() {
+        return (
+            <div>
+                <h1 id="tabelLabel">Список книг</h1>
+        <p>Это таблица с книгами, здесь можно добавить или удалить книги, а также переименовать существующие</p>
+                {
+                    this.state.loading
+                        ? <p><em>Loading...</em></p>
+                        : Cabinet.renderTable(this.state.books, this.deleteClick)
+                }
+                <button
+                    style={{
+                        width:"100px",
+                        height:"30px",
+                        borderRadius: "5px",
+                        borderColor: "#EEE",
+                        outline: 0,
+                        marginLeft: "5px"
+                    }}
+                    onClick={()=>{this.addClick()}}
+                >
+                    Добавить
+                </button>
+            </div>
+            
+        );
+    }
 }
+
 
